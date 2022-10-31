@@ -1,12 +1,12 @@
 from rest_framework.viewsets import ModelViewSet
 
-from core.models import Resumo, Curtida, Favorito, Comentario
+from core.models import Comentario, Curtida, Favorito, Resumo
 from core.serializers import (
-    ResumoSerializer,
+    ComentarioDetailSerializer,
+    ComentarioSerializer,
     CurtidaSerializer,
     FavoritoSerializer,
-    ComentarioSerializer,
-    ComentarioDetailSerializer,
+    ResumoSerializer,
 )
 
 

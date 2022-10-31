@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from core.models import Resumo, Curtida, Favorito, Comentario
+from core.models import Comentario, Curtida, Favorito, Resumo
 
 
 class ResumoSerializer(ModelSerializer):

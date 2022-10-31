@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Resumo, Curtida, Favorito, Comentario
+from core.models import Comentario, Curtida, Favorito, Resumo
 
 admin.site.register(Resumo)
 admin.site.register(Curtida)
