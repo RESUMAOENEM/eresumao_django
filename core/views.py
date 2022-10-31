@@ -6,6 +6,7 @@ from core.serializers import (
     CurtidaSerializer,
     FavoritoSerializer,
     ComentarioSerializer,
+    ComentarioDetailSerializer,
 )
 
 
@@ -26,4 +27,8 @@ class FavoritoViewSet(ModelViewSet):
 
 class ComentarioViewSet(ModelViewSet):
     queryset = Comentario.objects.all()
-    serializer_class = ComentarioSerializer
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return ComentarioDetailSerializer
+        return ComentarioSerializer
