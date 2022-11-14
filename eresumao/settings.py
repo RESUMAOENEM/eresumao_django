@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from datetime import timedelta
 
 import environ
 
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_spectacular",
     "rest_framework",
-    "rest_framework_simplejwt",
+    "djoser",
+    # "rest_framework_simplejwt",
     "core",
 ]
 
@@ -67,9 +69,22 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
+DJOSER = {
+    "SERIALIZERS": {
+        "user_create": "core.serializers.CustomUserRegistrationSerializer",
+        "current_user": "core.serializers.CustomUserSerializer",
+    },
+}
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
+
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Livraria API",
-    "DESCRIPTION": "API para gerenciamento de livraria, incluindo endpoints e documentação.",
+    "TITLE": "EResumao API",
+    "DESCRIPTION": "API para gerenciamento de resumos, incluindo endpoints e documentação.",
     "VERSION": "1.0.0",
 }
 
