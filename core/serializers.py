@@ -1,12 +1,16 @@
 from django.contrib.auth.models import Group
 from rest_framework.serializers import ModelSerializer
 
-from djoser.serializers import (
-    UserCreateSerializer as BaseUserRegistrationSerializer,
-    UserSerializer,
-)
+from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import UserDetailsSerializer
+
 
 from core.models import Comentario, Curtida, Favorito, Resumo
+
+
+class UsuarioNestedSerializer(UserDetailsSerializer):
+    class Meta(UserDetailsSerializer.Meta):
+        fields = ["pk", "username", "first_name", "last_name"]
 
 
 class ResumoSerializer(ModelSerializer):
@@ -34,29 +38,21 @@ class ComentarioSerializer(ModelSerializer):
 
 
 class ComentarioDetailSerializer(ModelSerializer):
+    comentado_por = UsuarioNestedSerializer()
+
     class Meta:
         model = Comentario
         fields = "__all__"
         depth = 1
 
 
-class CustomUserRegistrationSerializer(BaseUserRegistrationSerializer):
-    class Meta(BaseUserRegistrationSerializer.Meta):
-        fields = (
-            "id",
-            "email",
-            "username",
-            # "first_name",
-            # "last_name",
-            "password",
-        )
-
-    def perform_create(self, validated_data):
-        user = super().perform_create(validated_data)
+class CustomRegisterSerializer(RegisterSerializer):
+    def save(self, request):
+        user = super().save(request)
         user.groups.add(Group.objects.get(name="estudante"))
         return user
 
 
-class CustomUserSerializer(UserSerializer):
-    class Meta(UserSerializer.Meta):
-        fields = ("id", "username", "email", "first_name", "last_name", "is_staff")
+class CustomUserDetailsSerializer(UserDetailsSerializer):
+    class Meta(UserDetailsSerializer.Meta):
+        fields = UserDetailsSerializer.Meta.fields + ("is_active", "is_staff", "groups")

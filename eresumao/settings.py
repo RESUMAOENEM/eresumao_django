@@ -23,10 +23,16 @@ DATABASES = {"default": env.db()}
 
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": "eresumao",
+#         "USER": "eresumao_db",
+#         "PASSWORD": "ERESUMAO_db123",
+#         "HOST": "127.0.0.1",
+#         "PORT": "3306",
 #     }
 # }
+
+# CREATE DATABASE eresumao;
 
 
 # Application definition
@@ -38,13 +44,21 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "corsheaders",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
     "drf_spectacular",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     "rest_framework",
-    "djoser",
-    # "rest_framework_simplejwt",
+    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "core",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -59,9 +73,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "eresumao.urls"
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissions",
@@ -69,18 +91,25 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-DJOSER = {
-    "SERIALIZERS": {
-        "user_create": "core.serializers.CustomUserRegistrationSerializer",
-        "current_user": "core.serializers.CustomUserSerializer",
-    },
-}
+REST_USE_JWT = True
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("Bearer",),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+REST_AUTH_SERIALIZERS = {
+    "USER_DETAILS_SERIALIZER": "core.serializers.CustomUserDetailsSerializer",
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "core.serializers.CustomRegisterSerializer",
+}
+
+JWT_AUTH_COOKIE = "access"
+JWT_AUTH_REFRESH_COOKIE = "refresh"
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "EResumao API",
